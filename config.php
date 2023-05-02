@@ -4,7 +4,16 @@ $enablelogging = 0;
 $enablecounter = 1;
 
 $adipath = "file.adi";
-$cardpath = "card.jpg";
+
+$image = [
+    "path" => "card.jpg",
+    "forcedownload" => false,
+    "resize" => [
+        "enabled" => true,
+        "width" => 1600,
+        "height" => 900
+    ]
+];
 
 // HTML Table
 $table = [

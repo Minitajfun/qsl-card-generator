@@ -70,7 +70,7 @@ error_reporting(E_ALL);
 		</b>
 	</p>
 	<?php
-	if (!file_exists($cardpath))
+	if (!file_exists($image["path"]))
 		echo "<p><b>WARNING: CARD FILE MISSING</b></p>";
 	?>
 	<?php

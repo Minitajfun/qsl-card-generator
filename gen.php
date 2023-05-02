@@ -6,7 +6,8 @@
 include_once("config.php");
 include_once("funcs.php");
 
-if (!file_exists($adipath) || !file_exists($cardpath)) die();
+if (!file_exists($adipath) || !file_exists($image["path"]))
+    die();
 
 if (!isset($_GET["c"]) || strlen($_GET["c"]) == 0 || !isset($_GET["i"]) || strlen($_GET["i"]) == 0) {
     header("HTTP/1.0 404 Not Found");
@@ -35,9 +36,18 @@ unset($a);
 unset($x);
 
 header('Content-Type: image/jpeg');
-header('Content-Disposition: attachment; filename="card_' . $_GET["c"] . '_' . $v["qso_date"] . $v["time_on"] . '.jpg"');
+if ($image["forcedownload"]) header('Content-Disposition: attachment; filename="card_' . $_GET["c"] . '_' . $v["qso_date"] . $v["time_on"] . '.jpg"');
 
-$c = imagecreatefromjpeg($cardpath);
+$c = imagecreatefromjpeg($image["path"]);
+
+[$ow, $oh] = getimagesize($image["path"]);
+
+if ($image["resize"]["enabled"]) {
+    $cc = imagecreatetruecolor($image["resize"]["width"], $image["resize"]["height"]);
+    imagecopyresized($cc, $c, 0, 0, 0, 0, $image["resize"]["width"], $image["resize"]["height"], $ow, $oh);
+    $c = $cc;
+    imagedestroy($cc);
+}
 
 imagesetthickness($c, 3);
 $fg = imagehexcoloralloacate(
@@ -147,7 +157,9 @@ for ($i = 0; $i < count($frame["fields"]); $i++) {
 imagejpeg($c);
 imagedestroy($c);
 
-if ($enablecounter) file_put_contents("count", intval(file_get_contents("count")) + 1);
-if ($enablelogging) file_put_contents("log", time() . " " . $_GET["c"] . "\n", FILE_APPEND);
+if ($enablecounter)
+    file_put_contents("count", intval(file_get_contents("count")) + 1);
+if ($enablelogging)
+    file_put_contents("log", time() . " " . $_GET["c"] . "\n", FILE_APPEND);
 
 ?>
