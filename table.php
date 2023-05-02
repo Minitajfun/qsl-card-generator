@@ -6,18 +6,17 @@ error_reporting(E_ALL);
 include_once("config.php");
 include_once("funcs.php");
 
-if (!isset($_GET["c"]) || strlen($_GET["c"]) == 0)
-    exit();
+if (!file_exists($adipath)) return;
+if (!isset($_GET["c"]) || strlen($_GET["c"]) == 0) exit();
 
 $d = createarray($adipath);
 $n = 0;
 
-$rs = "<tr class='header'>";
+$rs = "<table><tr class='header'>";
 foreach ($table["fields"] as $f) {
     $rs .= "<th>{$f["title"]}</th>";
 }
 $rs .= "</tr>";
-
 foreach ($d as $de) {
     if (isset($de["call"]) && $de["call"] == $_GET["c"]) {
         $rs .= "<tr>";
@@ -37,6 +36,7 @@ foreach ($d as $de) {
         $n++;
     }
 }
+$rs .= "</table>";
 
 if ($n == 0)
     $rs .= "<td colspan=\"" . count($table["fields"]) . "\">No match found</td>";

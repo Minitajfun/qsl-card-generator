@@ -3,13 +3,15 @@
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 
+include_once("config.php");
+include_once("funcs.php");
+
+if (!file_exists($adipath) || !file_exists($cardpath)) die();
+
 if (!isset($_GET["c"]) || strlen($_GET["c"]) == 0 || !isset($_GET["i"]) || strlen($_GET["i"]) == 0) {
     header("HTTP/1.0 404 Not Found");
     exit();
 }
-
-include_once("config.php");
-include_once("funcs.php");
 
 $a = createarray($adipath);
 $x = 0;

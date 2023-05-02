@@ -58,21 +58,34 @@ error_reporting(E_ALL);
 	<p>Adi file last update:
 		<b>
 			<?php
-			$t = file_get_contents($adipath);
-			preg_match("<CREATED_TIMESTAMP:\d+>", $t, $m, PREG_OFFSET_CAPTURE);
-			$t = substr($t, $m[0][1] + strlen($m[0][0]) + 1, intval(explode(":", $m[0][0])[1]));
-			echo implode('.', splitDate(explode(' ', $t)[0])) . ' ' . implode(':', splitTime(explode(' ', $t)[1]));
+			if (!file_exists($adipath)) {
+				echo "FILE MISSING";
+			} else {
+				$t = file_get_contents($adipath);
+				preg_match("<CREATED_TIMESTAMP:\d+>", $t, $m, PREG_OFFSET_CAPTURE);
+				$t = substr($t, $m[0][1] + strlen($m[0][0]) + 1, intval(explode(":", $m[0][0])[1]));
+				echo implode('.', splitDate(explode(' ', $t)[0])) . ' ' . implode(':', splitTime(explode(' ', $t)[1]));
+			}
 			?>
 		</b>
 	</p>
 	<?php
+	if (!file_exists($cardpath))
+		echo "<p><b>WARNING: CARD FILE MISSING</b></p>";
+	?>
+	<?php
 	if ($enablecounter)
-		echo "<p><b>" . (file_get_contents("count")) . "</b> QSL cards generated so far</p>"; ?>
-	<table id="results">
-		<?php
-			include_once("table.php");
-		?>
-	</table>
+		echo "<p><b>";
+	if (!file_exists("count"))
+		echo 0;
+	else
+		echo file_get_contents("count");
+	echo "</b> QSL cards generated so far</p>";
+	?>
+	<?php
+	if (isset($_GET["c"]) && strlen($_GET["c"]) > 0)
+		include_once("table.php");
+	?>
 	<footer><br />Created by <a href="http://github.com/minitajfun">Minitajfun</a></footer>
 </body>
 
