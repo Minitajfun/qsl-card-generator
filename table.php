@@ -18,16 +18,16 @@ foreach ($table["fields"] as $f) {
 }
 $rs .= "</tr>";
 foreach ($d as $de) {
-    if (isset($de["call"]) && $de["call"] == $_GET["c"]) {
+    if (isset($de["call"]) && strtolower($de["call"]) == strtolower($_GET["c"])) {
         $rs .= "<tr>";
         foreach ($table["fields"] as $f) {
             if (!isset($de[$f["value"]])) $de[$f["value"]] = "&nbsp;";
 
-            if ($f["value"] == "qso_date")
+            if (strtolower($f["value"]) == "qso_date")
                 $rs .= "<td>" . implode(".", splitDate($de[$f["value"]])) . "</td>";
-            else if ($f["value"] == "time_on")
+            else if (strtolower($f["value"]) == "time_on")
                 $rs .= "<td>" . implode(":", splitTime($de[$f["value"]])) . "</td>";
-            else if ($de[$f["value"]] == "MFSK")
+            else if (strtolower($de[$f["value"]]) == "MFSK")
                 $rs .= "<td>{$de["submode"]}</td>";
             else
                 $rs .= "<td>{$de[$f["value"]]}</td>";

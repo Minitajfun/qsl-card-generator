@@ -17,7 +17,7 @@ $a = createarray($adipath);
 $x = 0;
 $v;
 for ($i = 0; $i < count($a); $i++) {
-    if (isset($a[$i]["call"]) && $a[$i]["call"] == $_GET["c"])
+    if (isset($a[$i]["call"]) && strtolower($a[$i]["call"]) == strtolower($_GET["c"]))
         if ($x == intval($_GET["i"])) {
             $v = $a[$i];
             break;
@@ -93,11 +93,11 @@ for ($i = 0; $i < count($frame["fields"]); $i++) {
     $rightv = 0;
     $topv = 0;
     $bottomv = 0;
-    if ($v[$frame["fields"][$i]["value"]] == "MFSK")
+    if (strtolower($v[$frame["fields"][$i]["value"]]) == "mfsk")
         $frame["fields"][$i]["value"] = "submode";
-    else if ($frame["fields"][$i]["value"] == "qso_date")
+    else if (strtolower($frame["fields"][$i]["value"]) == "qso_date")
         $v[$frame["fields"][$i]["value"]] = implode(".", splitDate($v[$frame["fields"][$i]["value"]]));
-    else if ($frame["fields"][$i]["value"] == "time_on")
+    else if (strtolower($frame["fields"][$i]["value"]) == "time_on")
         $v[$frame["fields"][$i]["value"]] = implode(":", splitTime($v[$frame["fields"][$i]["value"]]));
     do {
         list($leftt, $topt, $rightt, , , $bottomt) = imageftbbox($frame["fontsize"] - $cft, 0, realpath("Roboto-Regular.ttf"), $frame["fields"][$i]["title"]);
