@@ -6,8 +6,10 @@ error_reporting(E_ALL);
 include_once("config.php");
 include_once("funcs.php");
 
-if (!file_exists($adipath)) return;
-if (!isset($_GET["c"]) || strlen($_GET["c"]) == 0) exit();
+if (!file_exists($adipath))
+    return;
+if (!isset($_GET["c"]) || strlen($_GET["c"]) == 0)
+    exit();
 
 $d = createarray($adipath);
 $n = 0;
@@ -21,7 +23,8 @@ foreach ($d as $de) {
     if (isset($de["call"]) && strtolower($de["call"]) == strtolower($_GET["c"])) {
         $rs .= "<tr>";
         foreach ($table["fields"] as $f) {
-            if (!isset($de[$f["value"]])) $de[$f["value"]] = "&nbsp;";
+            if (!isset($de[$f["value"]]))
+                $de[$f["value"]] = "&nbsp;";
 
             if (strtolower($f["value"]) == "qso_date")
                 $rs .= "<td>" . implode(".", splitDate($de[$f["value"]])) . "</td>";
@@ -36,10 +39,9 @@ foreach ($d as $de) {
         $n++;
     }
 }
-$rs .= "</table>";
-
 if ($n == 0)
     $rs .= "<td colspan=\"" . count($table["fields"]) . "\">No match found</td>";
+$rs .= "</table>";
 
 print($rs);
 
