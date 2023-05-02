@@ -36,7 +36,8 @@ unset($a);
 unset($x);
 
 header('Content-Type: image/jpeg');
-if ($image["forcedownload"]) header('Content-Disposition: attachment; filename="card_' . $_GET["c"] . '_' . $v["qso_date"] . $v["time_on"] . '.jpg"');
+if ($image["forcedownload"])
+    header('Content-Disposition: attachment; filename="card_' . $_GET["c"] . '_' . $v["qso_date"] . $v["time_on"] . '.jpg"');
 
 $c = imagecreatefromjpeg($image["path"]);
 
@@ -71,7 +72,7 @@ imagefilledrectangle(
     $frame["pos"]["x"],
     $frame["pos"]["y"],
     $frame["pos"]["x"] + $frame["length"],
-    $frame["pos"]["y"] + 110,
+    $frame["pos"]["y"] + $frame["fontsize"] * 2 + $frame["padding"] * 2 + $frame["fontsize"] + 9,
     $bg
 );
 imagerectangle(
@@ -79,7 +80,7 @@ imagerectangle(
     $frame["pos"]["x"] + $frame["padding"],
     $frame["pos"]["y"] + $frame["padding"],
     $frame["pos"]["x"] + $frame["length"] - $frame["padding"],
-    $frame["pos"]["y"] + 110 - $frame["padding"],
+    $frame["pos"]["y"] + $frame["fontsize"] * 2 + $frame["padding"] + $frame["fontsize"] + 9,
     $fg
 );
 imageline(
@@ -129,7 +130,7 @@ for ($i = 0; $i < count($frame["fields"]); $i++) {
         $st,
         $frame["pos"]["y"] + $frame["padding"],
         $st,
-        $frame["pos"]["y"] + 110 - $frame["padding"],
+        $frame["pos"]["y"] + $frame["fontsize"] * 2 + $frame["padding"] + $frame["fontsize"] + 9,
         $fg
     );
     imagettftext(
@@ -147,7 +148,7 @@ for ($i = 0; $i < count($frame["fields"]); $i++) {
         $frame["fontsize"] - $cfv,
         0,
         $st - (($sizeunit * $frame["fields"][$i]["size"] + 3) / 2) - (($rightv + $leftv) / 2),
-        ($frame["pos"]["y"] + $frame["padding"] + 6 + $frame["fontsize"] + $frame["fontsize"] / 2) + (($frame["fontsize"] - $cfv) + ($frame["fontsize"] + $cfv) / 2),
+        ($frame["pos"]["y"] + $frame["padding"] + 6 + $frame["fontsize"] + $frame["fontsize"] / 2) + (($frame["fontsize"] - $cfv) + ($frame["fontsize"] + $cfv) / 4),
         $fg,
         realpath("Roboto-Regular.ttf"),
         $v[$frame["fields"][$i]["value"]]
