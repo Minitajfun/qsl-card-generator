@@ -1,7 +1,7 @@
 <?php
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
 if (!isset($_GET["c"]) || strlen($_GET["c"]) == 0 || !isset($_GET["i"]) || strlen($_GET["i"]) == 0) {
     header("HTTP/1.0 404 Not Found");
@@ -34,7 +34,6 @@ unset($x);
 
 header('Content-Type: image/jpeg');
 header('Content-Disposition: attachment; filename="card_' . $_GET["c"] . '_' . $v["qso_date"] . $v["time_on"] . '.jpg"');
-
 
 $c = imagecreatefromjpeg($cardpath);
 
@@ -99,14 +98,14 @@ for ($i = 0; $i < count($frame["fields"]); $i++) {
     else if ($frame["fields"][$i]["value"] == "time_on")
         $v[$frame["fields"][$i]["value"]] = implode(":", splitTime($v[$frame["fields"][$i]["value"]]));
     do {
-        list($leftt, $topt, $rightt, , , $bottomt) = imageftbbox($frame["fontsize"] - $cft, 0, "Roboto-Regular.ttf", $frame["fields"][$i]["title"]);
+        list($leftt, $topt, $rightt, , , $bottomt) = imageftbbox($frame["fontsize"] - $cft, 0, realpath("Roboto-Regular.ttf"), $frame["fields"][$i]["title"]);
         if ($rightt - $leftt > ($st + $sizeunit * $frame["fields"][$i]["size"] + 3) - $st - ($frame["fontsize"] - $cft) / 2)
             $cft++;
         else
             break;
     } while (true);
     do {
-        list($leftv, $topv, $rightv, , , $bottomv) = imageftbbox($frame["fontsize"] - $cfv, 0, "Roboto-Regular.ttf", $v[$frame["fields"][$i]["value"]]);
+        list($leftv, $topv, $rightv, , , $bottomv) = imageftbbox($frame["fontsize"] - $cfv, 0, realpath("Roboto-Regular.ttf"), $v[$frame["fields"][$i]["value"]]);
         if ($rightv - $leftv > ($st + $sizeunit * $frame["fields"][$i]["size"] + 3) - $st - ($frame["fontsize"] - $cfv) / 2)
             $cfv++;
         else
@@ -128,7 +127,7 @@ for ($i = 0; $i < count($frame["fields"]); $i++) {
         $st - (($sizeunit * $frame["fields"][$i]["size"] + 3) / 2) - (($rightt + $leftt) / 2),
         $frame["pos"]["y"] + $frame["padding"] + ($frame["fontsize"] - $cft) + ($frame["fontsize"] + $cft * 2) / 4,
         $fg,
-        "Roboto-Regular.ttf",
+        realpath("Roboto-Regular.ttf"),
         $frame["fields"][$i]["title"]
     );
     imagettftext(
@@ -138,7 +137,7 @@ for ($i = 0; $i < count($frame["fields"]); $i++) {
         $st - (($sizeunit * $frame["fields"][$i]["size"] + 3) / 2) - (($rightv + $leftv) / 2),
         ($frame["pos"]["y"] + $frame["padding"] + 6 + $frame["fontsize"] + $frame["fontsize"] / 2) + (($frame["fontsize"] - $cfv) + ($frame["fontsize"] + $cfv) / 2),
         $fg,
-        "Roboto-Regular.ttf",
+        realpath("Roboto-Regular.ttf"),
         $v[$frame["fields"][$i]["value"]]
     );
 }

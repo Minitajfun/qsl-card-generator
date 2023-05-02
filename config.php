@@ -1,5 +1,5 @@
 <?php
-
+ini_set('memory_limit', '-1');
 $enablelogging = 0;
 $enablecounter = 1;
 
