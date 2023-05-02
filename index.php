@@ -41,38 +41,19 @@ error_reporting(E_ALL);
 			align-items: center;
 			flex-direction: column;
 		}
-	</style>
-	<script>
-		document.addEventListener("DOMContentLoaded", () => {
-			document.getElementById('nptCallsign').addEventListener("keydown", (e) => { if (e.keyCode === 13) fetchTable(); });
-			document.getElementById('btnSubmit').addEventListener("click", fetchTable);
-		});
 
-		function fetchTable() {
-			if (document.getElementById('nptCallsign').value.length == 0) return;
-			let xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function () {
-				if (this.readyState == 4 && this.status == 200) {
-					document.getElementById('results').innerHTML = this.responseText;
-				}
-				else if (this.readyState == 4 && this.status == 204) {
-					alert("Callsign not found");
-				}
-			};
-			xhttp.open("GET", "table.php?q=" + document.getElementById('nptCallsign').value, true);
-			xhttp.send();
+		p {
+			margin: 8px;
 		}
-
-		function generateCard(c, i) {
-			window.location.href = `gen.php?c=${c}&i=${i}`;
-		};
-	</script>
+	</style>
 </head>
 
 <body>
 	<div>
-		<label for="nptCallsign">Callsign: </label><input type="text" id="nptCallsign"> <input type="submit"
-			value="Submit" id="btnSubmit">
+		<form action="index.php" method="get">
+			<label for="nptCallsign">Callsign: </label><input type="text" id="nptCallsign" name="c"> <input
+				type="submit" value="Submit" id="btnSubmit">
+		</form>
 	</div>
 	<p>Adi file last update:
 		<b>
@@ -83,9 +64,15 @@ error_reporting(E_ALL);
 			echo implode('.', splitDate(explode(' ', $t)[0])) . ' ' . implode(':', splitTime(explode(' ', $t)[1]));
 			?>
 		</b>
-	</p><?php 
-	if ($enablecounter) echo "<p><b>" . (file_get_contents("count")) . "</b> QSL cards generated so far</p>";?>
-	<table id="results"></table>
+	</p>
+	<?php
+	if ($enablecounter)
+		echo "<p><b>" . (file_get_contents("count")) . "</b> QSL cards generated so far</p>"; ?>
+	<table id="results">
+		<?php
+			include_once("table.php");
+		?>
+	</table>
 	<footer><br />Created by <a href="http://github.com/minitajfun">Minitajfun</a></footer>
 </body>
 
