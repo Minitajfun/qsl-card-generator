@@ -33,7 +33,7 @@ foreach ($d as $de) {
             else
                 $rs .= "<td>{$de[$f["value"]]}</td>";
         }
-        $rs .= "<td><a href=\"gen.php?c=" . $_GET["c"] . "&i=$n\"><input type=\"submit\" value=\"Generate\"></a></td></tr>";
+        $rs .= "<td><a href=\"gen.php?c=" . $_GET["c"] . "&i=$n\"><input type=\"button\" value=\"Generate\"></a></td></tr>";
         $n++;
     }
 }
