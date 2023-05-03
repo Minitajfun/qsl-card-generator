@@ -60,7 +60,7 @@ error_reporting(E_ALL);
 			if (!file_exists($adipath)) {
 				echo "FILE MISSING";
 			} else {
-				print(date("Y.m.d H:i:s", filemtime($adipath)));
+				print(date("Y.m.d H:i:s \U\T\C", filemtime($adipath)));
 			}
 			?>
 		</b>
