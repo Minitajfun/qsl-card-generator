@@ -51,20 +51,16 @@ error_reporting(E_ALL);
 <body>
 	<div>
 		<form action="index.php" method="get">
-			<label for="nptCallsign">Callsign: </label><input type="text" id="nptCallsign" name="c"> <input
-				type="submit" value="Submit" id="btnSubmit">
+			<label for="nptCallsign">Callsign: </label><input type="text" id="nptCallsign" name="c"> <input type="submit" value="Submit" id="btnSubmit">
 		</form>
 	</div>
-	<p>Adi file last update:
+	<p>ADI file last modified date:
 		<b>
 			<?php
 			if (!file_exists($adipath)) {
 				echo "FILE MISSING";
 			} else {
-				$t = file_get_contents($adipath);
-				preg_match("<CREATED_TIMESTAMP:\d+>", $t, $m, PREG_OFFSET_CAPTURE);
-				$t = substr($t, $m[0][1] + strlen($m[0][0]) + 1, intval(explode(":", $m[0][0])[1]));
-				echo implode('.', splitDate(explode(' ', $t)[0])) . ' ' . implode(':', splitTime(explode(' ', $t)[1]));
+				print(date("Y.m.d H:i:s", filemtime($adipath)));
 			}
 			?>
 		</b>
