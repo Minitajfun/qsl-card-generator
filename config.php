@@ -57,12 +57,12 @@ $table = [
 $frame = [
     "foreground" => "#000000",
     "background" => "#FFFFFF",
-    "fontsize" => 12,
+    "fontsize" => 24,
     "pos" => [
         "x" => 0,
-        "y" => 540
+        "y" => 0
     ],
-    "length" => 549,
+    "length" => 900,
     "padding" => 7,
     "fields" => [
         [
