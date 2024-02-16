@@ -2,11 +2,13 @@
 ini_set('memory_limit', '-1');
 $enablelogging = 0;
 $enablecounter = 1;
+$enableexample = 1;
 
 $adipath = "file.adi";
 
 $image = [
     "path" => "card.jpg",
+    "example_path" => "card_example.jpg",
     "forcedownload" => false,
     "resize" => [
         "enabled" => true,
@@ -55,12 +57,12 @@ $table = [
 $frame = [
     "foreground" => "#000000",
     "background" => "#FFFFFF",
-    "fontsize" => 24,
+    "fontsize" => 12,
     "pos" => [
         "x" => 0,
-        "y" => 0
+        "y" => 540
     ],
-    "length" => 1000,
+    "length" => 549,
     "padding" => 7,
     "fields" => [
         [
@@ -95,5 +97,3 @@ $frame = [
         ]
     ]
 ];
-
-?>

@@ -1,49 +1,57 @@
 <?php
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require_once "config.php";
 require_once "funcs.php";
 
-if (!file_exists($adipath) || !file_exists($image["path"])) {
+if (!isset($example))
+    $example = true;
+
+if ($example) {
+    if (!(is_writable(".") || is_writable($image["example_path"]))) {
+        throw new RuntimeException("Script does not have rights to create an example file");
+    }
+}
+
+if (($example && !file_exists($adipath)) || !file_exists($image["path"])) {
     echo "NESSESARY FILES MISSING";
     header("HTTP/1.0 404 Not Found");
     exit();
 }
 
-if (!isset($_GET["c"]) || strlen($_GET["c"]) == 0 || !isset($_GET["i"]) || strlen($_GET["i"]) == 0) {
+if (!$example && (strlen(@$_GET["c"]) == 0 || strlen(@$_GET["i"]) == 0)) {
     header("HTTP/1.0 404 Not Found");
     exit();
 }
 
 
 // Get nessesary data, throw 204 when no data found
-$array = createarray($adipath);
-$ispot = 0;
-$data;
-for ($i = 0; $i < count($array); $i++) {
-    if (isset($array[$i]["call"]) && strtolower($array[$i]["call"]) == strtolower($_GET["c"])) {
-        if ($ispot == intval($_GET["i"])) {
-            $data = $array[$i];
-            break;
-        } else {
-            $ispot = $ispot + 1;
+$data = [];
+
+if ($example){
+    $data = array_fill_keys(array_map(fn($arr) => $arr["value"], $frame["fields"]), "XX");
+} else {
+    $array = createarray($adipath);
+    $ispot = 0;
+    for ($i = 0; $i < count($array); $i++) {
+        if (isset($array[$i]["call"]) && strtolower($array[$i]["call"]) == strtolower($_GET["c"])) {
+            if ($ispot == intval($_GET["i"])) {
+                $data = $array[$i];
+                break;
+            } else {
+                $ispot = $ispot + 1;
+            }
         }
     }
-}
-unset($array);
-unset($ispot);
-if (!isset($data)) {
-    echo "NO CONTENT";
-    header("HTTP/1.1 204 NO CONTENT");
-    exit();
-}
-
-// Set headers
-header('Content-Type: image/jpeg');
-if ($image["forcedownload"]) {
-    header('Content-Disposition: attachment; filename="card_' . $_GET["c"] . '_' . $data["qso_date"] . $data["time_on"] . '.jpg"');
+    unset($array);
+    unset($ispot);
+    if (!isset($data)) {
+        echo "NO CONTENT";
+        header("HTTP/1.1 204 NO CONTENT");
+        exit();
+    }
 }
 
 // Prepare frame
@@ -107,12 +115,14 @@ for ($i = 0; $i < count($frame["fields"]); $i++) {
     $valuebottomposcorrection = 0;
 
     /// Swap some values
-    if (strtolower($data[$frame["fields"][$i]["value"]]) == "mfsk") {
-        $frame["fields"][$i]["value"] = "submode";
-    } else if (strtolower($frame["fields"][$i]["value"]) == "qso_date") {
-        $data[$frame["fields"][$i]["value"]] = implode(".", splitDate($data[$frame["fields"][$i]["value"]]));
-    } else if (strtolower($frame["fields"][$i]["value"]) == "time_on") {
-        $data[$frame["fields"][$i]["value"]] = implode(":", splitTime($data[$frame["fields"][$i]["value"]]));
+    if (!$example){
+        if (strtolower($data[$frame["fields"][$i]["value"]]) == "mfsk") {
+            $frame["fields"][$i]["value"] = "submode";
+        } else if (strtolower($frame["fields"][$i]["value"]) == "qso_date") {
+            $data[$frame["fields"][$i]["value"]] = implode(".", splitDate($data[$frame["fields"][$i]["value"]]));
+        } else if (strtolower($frame["fields"][$i]["value"]) == "time_on") {
+            $data[$frame["fields"][$i]["value"]] = implode(":", splitTime($data[$frame["fields"][$i]["value"]]));
+        }
     }
 
     /// Prepare variables for font resizing 
@@ -198,15 +208,29 @@ if (
 // Put frame onto the QSL card
 imagecopymerge($cardimage, $frameimage, max(0, $frame["pos"]["x"]), max(0, $frame["pos"]["y"]), 0, 0, $frame["length"], $frame["fontsize"] * 2 + $frame["padding"] * 2 + $frame["fontsize"] + 9, 100);
 
-// Display and destroy images
-imagejpeg($cardimage);
-imagedestroy($frameimage);
-imagedestroy($cardimage);
 
-// Write selected data
-if ($enablecounter) {
-    file_put_contents("count", intval(file_get_contents("count")) + 1);
-}
-if ($enablelogging) {
-    file_put_contents("log", time() . " " . $_GET["c"] . "\n", FILE_APPEND);
+
+if ($example){
+    imagejpeg($cardimage, "card_example.jpg", 95);
+    imagedestroy($frameimage);
+    imagedestroy($cardimage);
+} else {
+    // Set headers
+    header('Content-Type: image/jpeg', 95);
+    if ($image["forcedownload"]) {
+        header('Content-Disposition: attachment; filename="card_' . $_GET["c"] . '_' . $data["qso_date"] . $data["time_on"] . '.jpg"');
+    }
+
+    // Display and destroy images
+    imagejpeg($cardimage);
+    imagedestroy($frameimage);
+    imagedestroy($cardimage);
+
+    // Write selected data
+    if ($enablecounter) {
+        file_put_contents("count", intval(file_get_contents("count")) + 1);
+    }
+    if ($enablelogging) {
+        file_put_contents("log", time() . " " . $_GET["c"] . "\n", FILE_APPEND);
+    }
 }

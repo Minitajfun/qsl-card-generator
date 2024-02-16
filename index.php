@@ -82,7 +82,25 @@ error_reporting(E_ALL);
 	if (isset($_GET["c"]) && strlen($_GET["c"]) > 0)
 		include_once("table.php");
 	?>
-	<footer><br />Created by <a href="http://github.com/minitajfun">Minitajfun</a></footer>
+	<?php
+	if ($enableexample) {
+	?>
+	<p>Example card:</p>
+	<?php
+		if (!file_exists("card_example.jpg") || filemtime($image["path"]) > filemtime($image["example_path"])) {
+			try {
+			$example = true;
+			include_once("gen.php");
+			} catch(Exception) {
+				echo "<h4 style='color: darkred;'>Failed to generate</h4>";
+			}
+		} else {
+			echo '<img src="card_example.jpg" alt="Example card" style="width: 65%">';
+		}
+	}
+	?>
+	
+	<footer><br />Created by <a href="http://github.com/minitajfun" target="_blank">Minitajfun</a></footer>
 </body>
 
 </html>
